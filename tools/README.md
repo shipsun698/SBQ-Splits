@@ -1,6 +1,8 @@
-# Standalone tools
+# Analysis and visualization tools
 
-> **Source-preview availability.** The four tools below work with existing files and do not construct or execute a detector. `benchmark.py` is retained from upstream DINO but detector benchmarking is unavailable in this snapshot. Its historical usage is not an active workflow. See [code availability](../docs/CODE_AVAILABILITY.md).
+These tools accompany the SBQ-Net code. They read existing logs or saved predictions and write metric tables, run summaries, plots, or annotated images.
+
+`benchmark.py` contains detector benchmarking code. Running it requires model files and dependencies outside the current upload.
 
 Run commands from the package root with your own input paths and an existing output parent directory. No experimental logs, predictions, or sample detection images are supplied. Each tool offers `--help`, refuses an existing output unless `--overwrite` is given, and never allows its output to overwrite an input file.
 
@@ -17,7 +19,7 @@ Run commands from the package root with your own input paths and an existing out
 python tools/export_training_metrics.py --log run.log --output metrics.csv
 ```
 
-Every log line must contain one JSON object; blank or invalid JSON lines fail with an error. The tool preserves original fields, including the complete `test_coco_eval_bbox` array, and adds only the fixed aliases `mAP = test_coco_eval_bbox[0]`, `AP50 = [1]`, and `AP75 = [2]` when that array is present. Conflicting raw and aliased values are errors. Missing values remain empty CSV cells. Separate precision fields retain their names and values instead of being merged into a best precision value.
+Every log line must contain one JSON object. Blank or invalid JSON lines fail with an error. The tool preserves original fields, including the complete `test_coco_eval_bbox` array, and adds only the fixed aliases `mAP = test_coco_eval_bbox[0]`, `AP50 = [1]`, and `AP75 = [2]` when that array is present. Conflicting raw and aliased values are errors. Missing values remain empty CSV cells. Separate precision fields retain their names and values instead of being merged into a best precision value.
 
 ## Summarize a run
 
@@ -25,7 +27,7 @@ Every log line must contain one JSON object; blank or invalid JSON lines fail wi
 python tools/summarize_training_run.py --log run.log --output summary.json --metric mAP
 ```
 
-Select the metric explicitly when a different recorded field is needed. The default is `mAP`, including the fixed COCO-array alias described above. The summary reports the maximum of that exact metric across records, its epoch, and observed/missing counts; the first input record wins ties. Every selected field is maximized, including a loss field, so this is not a general checkpoint-selection policy. It does not combine precision fields across thresholds or evaluate a model.
+Select the metric explicitly when a different recorded field is needed. The default is `mAP`, including the fixed COCO-array alias described above. The summary reports the maximum of that exact metric across records, its epoch, and observed/missing counts. The first input record wins ties. Every selected field is maximized, including a loss field, so this is not a general checkpoint-selection policy. It does not combine precision fields across thresholds or evaluate a model.
 
 ## Plot curves
 
@@ -33,7 +35,7 @@ Select the metric explicitly when a different recorded field is needed. The defa
 python tools/plot_training_curves.py --csv metrics.csv --output curves.png --metrics mAP,AP50
 ```
 
-Use names present in the CSV. Without `--metrics`, the tool selects available numeric observations from `mAP`, `train_loss`, and `test_loss`. Each metric uses a separate axis at its original scale. Missing measurements remain gaps; the tool does not replace them with zero or normalize them. The output must be a PNG file. `matplotlib` is imported only when plotting is requested, so help remains available without it.
+Use names present in the CSV. Without `--metrics`, the tool selects available numeric observations from `mAP`, `train_loss`, and `test_loss`. Each metric uses a separate axis at its original scale. Missing measurements remain gaps. The tool does not replace them with zero or normalize them. The output must be a PNG file. `matplotlib` is imported only when plotting is requested, so help remains available without it.
 
 ## Draw existing predictions
 
@@ -58,9 +60,9 @@ Add `--overwrite` only when replacing an existing output is intended. This optio
 The package's synthetic tests can be run from the package root:
 
 ```sh
-python -B -m unittest discover -s tests -v
+python -B -m unittest tests.test_log_tools -v
 ```
 
-These tests cover the release boundary and tool behavior with synthetic inputs. They are not model validation, research-result reproduction, or the separate upstream CUDA-operator test.
+This command checks the standalone tools with synthetic inputs. It does not run a detector or reproduce the paper's experiments.
 
-See [environment](../docs/ENVIRONMENT.md), [metric semantics](../docs/METRICS.md), and [release status](../RELEASE_STATUS.md).
+See the [project overview](../README.md) for the published directory structure and current release status.

@@ -1,3 +1,4 @@
+.gitattributes
 README.md
 UPLOAD_FILES.txt
 models/dino/ops/src/cpu/ms_deform_attn_cpu.cpp

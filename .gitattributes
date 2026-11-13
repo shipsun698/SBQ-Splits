@@ -1,0 +1,5 @@
+# Include Python source in the language breakdown.
+*.py linguist-language=Python linguist-detectable=true
+
+# Exclude bundled native attention extension sources from language statistics.
+models/dino/ops/src/** linguist-vendored

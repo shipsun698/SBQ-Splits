@@ -1,12 +1,14 @@
 # SBQ-Net: SAR Ship Detection
 
-This repository accompanies our paper on **SBQ-Net**, a ship detection method for synthetic aperture radar (SAR) imagery. It hosts the documentation and file inventory for the paper's code.
+**Code for our paper on SBQ-Net.**
 
-## Research focus
+SBQ-Net studies ship detection in synthetic aperture radar (SAR) imagery, with attention to small targets, weak returns, and uncertain boundaries in coastal scenes where clutter can resemble ship responses.
 
-In SAR imagery, small ships and weak returns can be difficult to separate from coastal clutter, especially when target boundaries are unclear and ship sizes vary within the same scene. Localization also becomes harder when the visible ship response covers only part of the target.
+[Project structure](#project-structure) · [Analysis tools](#analysis-tools) · [Dependencies](#dependencies) · [Release status](#release-status)
 
-These cases motivate SBQ-Net.
+## Method overview
+
+Small ships can occupy only a few pixels. When the visible return covers part of a hull or blends with nearby clutter, selecting a reliable detection candidate and locating its boundary become closely related problems.
 
 | Component | Research focus |
 | --- | --- |
@@ -14,31 +16,44 @@ These cases motivate SBQ-Net.
 | SBA | Scale- and boundary-aware refinement, with attention to target extent and uncertain localization. |
 | MSQ | Quality-aware query prediction, with attention to the reliability of detection candidates. |
 
-The project studies how these components can help detect difficult ship targets. The descriptions above outline their intended roles. Implementation details and experimental results will be documented with the corresponding release.
+These descriptions outline the roles studied in the paper. The release status below describes the implementation files available in this repository.
 
-## Repository contents
+## Project structure
 
-Two files are currently published.
+The current snapshot contains **54 files**, grouped by their role in the project. The [file inventory](UPLOAD_FILES.txt) lists every published path.
 
-| File | Contents |
-| --- | --- |
-| `README.md` | An overview of SBQ-Net and the current code release status. |
-| [`UPLOAD_FILES.txt`](UPLOAD_FILES.txt) | The file inventory for the paper's code package. |
+| Path | Files | Contents |
+| --- | ---: | --- |
+| [`models/`](models/) | 14 | Position encoding, segmentation, transformer modules, model registration, and attention operator sources. |
+| [`scripts/`](scripts/) | 12 | Training and evaluation launch scripts, including distributed, multi-scale, ConvNeXt, and Swin variants. |
+| [`tests/`](tests/) | 3 | Tests for log tools and execution entry points. |
+| [`tools/`](tools/) | 6 | Metric export, curve plotting, run summaries, prediction rendering, and benchmarking source. |
+| [`util/`](util/) | 14 | Box operations and losses, configuration handling, logging, timing, and visualization utilities. |
+| Root files | 5 | This README, the file inventory, dependencies, release compatibility code, and job submission source. |
 
-The inventory lists paths for the planned package, including model code, configurations, dataset utilities, documentation, and analysis tools. Listing a path in `UPLOAD_FILES.txt` does not mean that the file has already been uploaded.
+Script names describe their task. Examples include [`train.sh`](scripts/train.sh), [`eval.sh`](scripts/eval.sh), and [`train_dist.sh`](scripts/train_dist.sh).
 
-## Code organization
+## Analysis tools
 
-The planned package places detector definitions and related operators in `models/`, with configuration files in `config/` and dataset loading, transformation, and evaluation code in `datasets/`. Shared utilities belong in `util/`.
+The standalone tools work with existing logs and saved predictions. Run them from the repository root, replacing the example paths with your own files.
 
-Execution entry points include `main.py` and `engine.py`. Launch scripts are grouped under `scripts/`.
+```sh
+python tools/export_training_metrics.py --log run.log --output metrics.csv
+python tools/summarize_training_run.py --log run.log --output summary.json --metric mAP
+python tools/plot_training_curves.py --csv metrics.csv --output curves.png --metrics mAP,AP50
+python tools/render_detections.py --image image.png --predictions predictions.json --output detections.png
+```
 
-The tools listed in the inventory cover metric export from existing JSON-lines logs, training-curve plots, run summaries, and drawing detection boxes from saved predictions on existing images. Those drawing tools use saved results. They perform no inference.
+Metric export and run summaries use the Python standard library. Plotting requires `matplotlib`, and image rendering requires `Pillow`.
 
-Documentation paths under `docs/` cover the project structure, environment setup, code availability, training workflow, metrics, and common usage questions. The inventory also includes release-status information and a source manifest.
+The [tool guide](tools/README.md) describes input formats, metric aliases, and output handling. Each tool accepts `--help`.
 
-## Code availability
+## Dependencies
 
-SBQ-Net model components, training recipes, checkpoints, and experimental results have not been released. Detector training, evaluation, and inference are unavailable in the current snapshot.
+[`requirements.txt`](requirements.txt) records dependencies for the code package. Additional model, configuration, and dataset files are required to run the detector.
 
-Further uploads and usage instructions will be recorded in this README. A model release date has not been set.
+## Release status
+
+This is a partial source release. The files in [`UPLOAD_FILES.txt`](UPLOAD_FILES.txt) are available for inspection, and the standalone analysis tools can process user-supplied logs or predictions.
+
+Complete detector training, evaluation, and inference require source modules and configurations that are outside the current upload. Model weights and experimental logs are also absent. Further code uploads and usage instructions will be recorded here.

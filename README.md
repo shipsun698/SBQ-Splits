@@ -24,11 +24,11 @@ The current snapshot contains **54 files**, grouped by their role in the project
 
 | Path | Files | Contents |
 | --- | ---: | --- |
-| [`models/`](models/) | 14 | Position encoding, segmentation, transformer modules, model registration, and attention operator sources. |
-| [`scripts/`](scripts/) | 12 | Training and evaluation launch scripts, including distributed, multi-scale, ConvNeXt, and Swin variants. |
-| [`tests/`](tests/) | 3 | Tests for log tools and execution entry points. |
-| [`tools/`](tools/) | 6 | Metric export, curve plotting, run summaries, prediction rendering, and benchmarking source. |
-| [`util/`](util/) | 14 | Box operations and losses, configuration handling, logging, timing, and visualization utilities. |
+| [`models/`](https://github.com/shipsun698/SBQ-Splits/tree/main/models) | 14 | Position encoding, segmentation, transformer modules, model registration, and attention operator sources. |
+| [`scripts/`](https://github.com/shipsun698/SBQ-Splits/tree/main/scripts) | 12 | Training and evaluation launch scripts, including distributed, multi-scale, ConvNeXt, and Swin variants. |
+| [`tests/`](https://github.com/shipsun698/SBQ-Splits/tree/main/tests) | 3 | Tests for log tools and execution entry points. |
+| [`tools/`](https://github.com/shipsun698/SBQ-Splits/tree/main/tools) | 6 | Metric export, curve plotting, run summaries, prediction rendering, and benchmarking source. |
+| [`util/`](https://github.com/shipsun698/SBQ-Splits/tree/main/util) | 14 | Box operations and losses, configuration handling, logging, timing, and visualization utilities. |
 | Root files | 5 | This README, the file inventory, dependencies, release compatibility code, and job submission source. |
 
 Script names describe their task. Examples include [`train.sh`](scripts/train.sh), [`eval.sh`](scripts/eval.sh), and [`train_dist.sh`](scripts/train_dist.sh).
